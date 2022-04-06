@@ -12,6 +12,8 @@ nodes = [
     {:name =>  "m-k8s", :cpu => 2, :mem => "3084", :ip => "%s.100" % [SUBNET], :ssh_port => 50100},
     {:name => "w1-k8s", :cpu => 1, :mem => "2060", :ip => "%s.101" % [SUBNET], :ssh_port => 50101},
     {:name => "w2-k8s", :cpu => 1, :mem => "2060", :ip => "%s.102" % [SUBNET], :ssh_port => 50102}
+
+    #{:name => "w3-k8s", :cpu => 1, :mem => "2060", :ip => "%s.103" % [SUBNET], :ssh_port => 50103}
 ]
 
 VAGRANTFILE_API_VERSION = "2"

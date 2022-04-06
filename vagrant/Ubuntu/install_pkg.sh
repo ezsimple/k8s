@@ -47,6 +47,7 @@ install_kubernetes() {
     step "===== Install Kubernetes ====="
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    sudo apt update
     # apt -y install kubelet kubeadm kubectl
     # apt-mark hold kubelet kubeadm kubectl
 }
@@ -56,8 +57,7 @@ install_tools() {
     # sudo apt install -y python-pip
     # pip install kafka --user
     # pip install kafka-python --user
-    sudo apt -y install default-jre git curl wget vim
-    sudo apt -y install net-tools xterm tmux cowsay 
+    sudo apt -y install openjdk-8-jdk net-tools xterm tmux cowsay 
 }
 
 setup_ssh_login() {
@@ -72,10 +72,20 @@ setup_welcome_msg() {
     sudo ln -s /usr/games/cowsay /usr/local/bin/cowsay
 }
 
+# repository mirror 변경으로 대체합니다.
+# install_apt_axel() {
+#    step "===== Install APT axel =====" 
+#    sudo apt update
+#    sudo apt install aria2
+#    sudo add-apt-repository -y ppa:apt-fast/stable
+#    sudo apt update
+#    sudo DEBIAN_FRONTEND=noninteractive apt -y install apt-fast
+# }
+
 main() {
     resolve_dns
-    install_kubernetes
     install_docker
+    install_kubernetes
     install_tools
     install_openssh
     setup_ssh_login

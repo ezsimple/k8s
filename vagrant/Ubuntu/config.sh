@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# repository 변경 (us => kor)
+sudo sed -i 's/us.archive.ubuntu.com/mirror.kakao.com/' /etc/apt/sources.list
+
 # vim configuration
 echo 'alias vi=vim' >> /etc/profile
 # config global vimrc
