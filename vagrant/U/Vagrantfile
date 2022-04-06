@@ -29,20 +29,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     SHELL
 
     # Fix : Warning: Connection reset. Retrying...
-    config.ssh.insert_key = false
-    config.ssh.private_key_path = ["~/.ssh/id_rsa"]
-    config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+    # config.ssh.insert_key = false
+    # config.ssh.private_key_path = ["~/.ssh/id_rsa"]
+    # config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
     # config.vm.network "public_network", bridge: "eth0", ip: VBOX_ADDR # 이거 안되네
-    config.ssh.username = "vagrant"
-    config.ssh.password = "vagrant"
+    # config.ssh.username = "vagrant"
+    # config.ssh.password = "vagrant"
 
-    config.vbguest.auto_update = false
-    config.vm.boot_timeout = 600 # wait max 10 minutes
+    # config.vbguest.auto_update = false
+    # config.vm.boot_timeout = 600 # wait max 10 minutes
     cfg.vm.provider "virtualbox" do |vb|
       vb.name = "m-k8s"
       vb.cpus = 1
       vb.memory = 2560
-      vb.check_guest_additions = false
+      # vb.check_guest_additions = false
 
       # Headless mode
       # vb.gui = true
@@ -73,20 +73,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       SHELL
 
       # Fix : Warning: Connection reset. Retrying...
-      config.ssh.insert_key = false
-      config.ssh.private_key_path = ["~/.ssh/id_rsa"]
-      config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+      # config.ssh.insert_key = false
+      # config.ssh.private_key_path = ["~/.ssh/id_rsa"]
+      # config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
       # config.vm.network "public_network", bridge: "eth0", ip: VBOX_ADDR # 이거 안되네
-      config.ssh.username = "vagrant"
-      config.ssh.password = "vagrant"
+      # config.ssh.username = "vagrant"
+      # config.ssh.password = "vagrant"
 
-      config.vbguest.auto_update = false
-      config.vm.boot_timeout = 600 # wait max 10 minutes
+      # config.vbguest.auto_update = false
+      # config.vm.boot_timeout = 600 # wait max 10 minutes
       cfg.vm.provider "virtualbox" do |vb|
         vb.name = "w#{i}-k8s"
         vb.cpus = 1
         vb.memory = 2560
-        vb.check_guest_additions = false
+        # vb.check_guest_additions = false
 
         # Headless mode
         # vb.gui = true

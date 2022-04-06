@@ -1,0 +1,1 @@
+{"dependencies":[["vagrant-faster",["= 0.2.0"]]],"checksum":"cf1c194454f2c2b72452183ffe14e15df3aed7831b1f95126a3cc3a7f12a9bda","vagrant_version":"2.2.19"}

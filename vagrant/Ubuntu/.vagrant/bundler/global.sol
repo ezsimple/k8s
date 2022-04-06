@@ -1,0 +1,1 @@
+{"dependencies":[["hostupdater",["= 1.0.0"]],["vagrant-faster",["= 0.2.0"]],["vagrant-hostmanager",["= 1.8.9"]],["vagrant-hostsupdater",["= 1.2.4"]],["racc",["~> 1.4"]],["nokogiri",[">= 0"]],["vagrant-parallels",["= 2.2.5"]],["rake",[">= 0"]],["virtualbox_WSL2",["= 0.1.3"]]],"checksum":"ed73ed745794b7ad9f697c48b75ddb50f10cab36ec352e47759e701debb87d2f","vagrant_version":"2.2.19"}

@@ -1,0 +1,50 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# 재적용 방법
+# vagrant reload --no-provision -f --timestamp --no-tty
+
+# 종료하기
+# vagrant halt -f
+
+SUBNET = "192.168.63"
+nodes = [
+    {:name =>  "m-k8s", :cpu => 2, :mem => "3084", :ip => "%s.100" % [SUBNET], :ssh_port => 50100},
+    {:name => "w1-k8s", :cpu => 1, :mem => "2060", :ip => "%s.101" % [SUBNET], :ssh_port => 50101},
+    {:name => "w2-k8s", :cpu => 1, :mem => "2060", :ip => "%s.102" % [SUBNET], :ssh_port => 50102}
+]
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  VBOX = "generic/ubuntu2004"
+  VBOX_VER = "3.6.12"
+
+  nodes.each do |opts|
+    config.vm.define opts[:name] do |cfg|
+      config.vm.box = VBOX
+      config.vm.box_version = VBOX_VER
+      config.vm.provision:shell, inline: <<-SHELL
+          sudo timedatectl set-timezone Asia/Seoul
+      SHELL
+      config.ssh.username = "vagrant"
+
+      cfg.vm.provider "virtualbox" do |vb|
+        vb.gui = true
+        vb.name = opts[:name]
+        vb.cpus = opts[:cpu || 1]
+        vb.memory = opts[:mem || "2048"]
+        vb.customize ["modifyvm", :id, "--vram", "12"]
+        vb.customize ["modifyvm", :id, "--uartmode1", "disconnected"]
+      end
+      cfg.vm.host_name = opts[:name]
+      # cfg.vm.network "forwarded_port", guest: 22, host: opts[:ssh_port], auto_correct: true, id: "ssh"
+      cfg.vm.network "private_network", ip: opts[:ip]
+      cfg.vm.synced_folder "../data", "/vagrant", disabled: true
+      cfg.vm.provision "shell", path: "config.sh"
+      cfg.vm.provision "shell", path: "install_pkg.sh"
+    end
+  end
+
+end
