@@ -9,11 +9,11 @@
 
 SUBNET = "192.168.63"
 nodes = [
-    {:name =>  "m-k8s", :cpu => 2, :mem => "3084", :ip => "%s.100" % [SUBNET], :ssh_port => 50100},
-    {:name => "w1-k8s", :cpu => 1, :mem => "2060", :ip => "%s.101" % [SUBNET], :ssh_port => 50101},
-    {:name => "w2-k8s", :cpu => 1, :mem => "2060", :ip => "%s.102" % [SUBNET], :ssh_port => 50102}
+    {:name =>  "m-k8s", :cpu => 2, :mem => "3084", :ip => "%s.100" % [SUBNET], :ssh_port => 5100},
+    {:name => "w1-k8s", :cpu => 1, :mem => "2060", :ip => "%s.101" % [SUBNET], :ssh_port => 5101},
+    {:name => "w2-k8s", :cpu => 1, :mem => "2060", :ip => "%s.102" % [SUBNET], :ssh_port => 5102}
 
-    #{:name => "w3-k8s", :cpu => 1, :mem => "2060", :ip => "%s.103" % [SUBNET], :ssh_port => 50103}
+    #{:name => "w3-k8s", :cpu => 1, :mem => "2060", :ip => "%s.103" % [SUBNET], :ssh_port => 5103}
 ]
 
 VAGRANTFILE_API_VERSION = "2"
@@ -41,7 +41,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ["modifyvm", :id, "--uartmode1", "disconnected"]
       end
       cfg.vm.host_name = opts[:name]
-      # cfg.vm.network "forwarded_port", guest: 22, host: opts[:ssh_port], auto_correct: true, id: "ssh"
+      cfg.vm.network "forwarded_port", guest: 22, host: opts[:ssh_port], auto_correct: true, id: "ssh"
       cfg.vm.network "private_network", ip: opts[:ip]
       cfg.vm.synced_folder "../data", "/vagrant", disabled: true
       cfg.vm.provision "shell", path: "config.sh"
