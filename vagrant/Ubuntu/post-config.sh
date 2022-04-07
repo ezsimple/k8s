@@ -10,4 +10,7 @@ swapoff -a
 sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
 
 # ssh add key
-sudo cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+sudo cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+# user env
+sudo cp /etc/bash.bash_aliases ~/.ssh/.bash_aliases
