@@ -3,6 +3,10 @@
 # repository 변경 (us => kor)
 sudo sed -i 's/us.archive.ubuntu.com/mirror.kakao.com/' /etc/apt/sources.list
 
+# ubuntu20.04 change grub : fix for too slow booting 
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT.*$/GRUB_CMDLINE_LINUX_DEFAULT=\"intremap=off quiet splash button.lid_init_state=open\"/' /etc/default/grub
+sudo update-grub
+
 # vim configuration
 echo 'alias vi=vim' >> /etc/profile
 # config global vimrc
@@ -137,8 +141,8 @@ sudo systemctl enable docker
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo apt update
-apt -y install kubelet kubeadm kubectl
-apt-mark hold kubelet kubeadm kubectl
+sudo apt -y install kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
 
 # ----------------------
 # JDK8

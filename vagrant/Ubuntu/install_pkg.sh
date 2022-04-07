@@ -49,8 +49,8 @@ install_kubernetes() {
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
     sudo apt update
-    # apt -y install kubelet kubeadm kubectl
-    # apt-mark hold kubelet kubeadm kubectl
+    sudo apt -y install kubelet kubeadm kubectl
+    sudo apt-mark hold kubelet kubeadm kubectl
 }
 
 install_tools() {
@@ -88,8 +88,8 @@ setup_welcome_msg() {
 
 main() {
     resolve_dns
-    # install_docker # docker 설치는 사용자 마다 선택
-    # install_kubernetes # kubernetes 설치는 사용자 마다 선택
+    # install_docker
+    # install_kubernetes
     install_tools # jdk 설치는 사용자 마다 선택
     install_openssh
     setup_ssh_login
