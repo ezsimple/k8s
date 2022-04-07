@@ -3,10 +3,6 @@
 # repository 변경 (us => kor)
 sudo sed -i 's/us.archive.ubuntu.com/mirror.kakao.com/' /etc/apt/sources.list
 
-# ubuntu20.04 change grub : fix for too slow booting 
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT.*$/GRUB_CMDLINE_LINUX_DEFAULT=\"intremap=off quiet splash button.lid_init_state=open\"/' /etc/default/grub
-sudo update-grub
-
 # vim configuration
 echo 'alias vi=vim' >> /etc/profile
 # config global vimrc
@@ -23,11 +19,6 @@ color darkblue
 syntax on
 set foldmethod=marker "zf를 눌러 folding 설정. 접힌 부분에 커서를 위치시키고 zo로 펼칠 수 있다.
 EOF
-
-# swapoff -a to disable swapping
-swapoff -a
-# sed to comment the swap partition in /etc/fstab
-sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
 
 # local small dns & vagrant cannot parse and delivery shell code.
 echo "192.168.63.100 m-k8s" >> /etc/hosts
@@ -141,8 +132,8 @@ sudo systemctl enable docker
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo apt update
-sudo apt -y install kubelet kubeadm kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
+# sudo apt -y install kubelet kubeadm kubectl
+# sudo apt-mark hold kubelet kubeadm kubectl
 
 # ----------------------
 # JDK8
