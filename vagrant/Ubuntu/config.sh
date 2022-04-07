@@ -148,4 +148,6 @@ sudo apt-mark hold kubelet kubeadm kubectl
 # JDK8
 # ----------------------
 sudo apt -y install openjdk-8-jdk
+
+echo "Finished Packages Installation" | cowsay
 EOF
