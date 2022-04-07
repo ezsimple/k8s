@@ -39,6 +39,7 @@ install_docker() {
 
 install_openssh() {
     step "===== Installing openssh ====="
+    sudo apt update
     sudo apt -y install openssh-server
     sudo systemctl enable ssh
 }
@@ -57,7 +58,9 @@ install_tools() {
     # sudo apt install -y python-pip
     # pip install kafka --user
     # pip install kafka-python --user
-    sudo apt -y install openjdk-8-jdk net-tools xterm tmux cowsay 
+    # sudo apt -y install openjdk-8-jdk xterm 
+    sudo apt update
+    sudo apt -y install net-tools tmux cowsay 
 }
 
 setup_ssh_login() {
@@ -70,6 +73,7 @@ setup_welcome_msg() {
     step "===== Install Welcome Message ====="
     sudo echo -e "\necho \"Welcome to Vagrant Ubuntu Server 20.04\" | cowsay\n" >> /home/vagrant/.bashrc
     sudo ln -s /usr/games/cowsay /usr/local/bin/cowsay
+    echo "Finished Ubuntu 20.04 Installation" | cowsay
 }
 
 # repository mirror 변경으로 대체합니다.
@@ -84,9 +88,9 @@ setup_welcome_msg() {
 
 main() {
     resolve_dns
-    install_docker
-    install_kubernetes
-    install_tools
+    # install_docker # docker 설치는 사용자 마다 선택
+    # install_kubernetes # kubernetes 설치는 사용자 마다 선택
+    install_tools # jdk 설치는 사용자 마다 선택
     install_openssh
     setup_ssh_login
     setup_welcome_msg

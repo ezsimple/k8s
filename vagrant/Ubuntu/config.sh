@@ -109,3 +109,39 @@ alias k=kubectl
 complete -F __start_kubectl k
 EOF
 
+# config mandatory packages
+cat <<EOF > /root/INSTALL.sh
+#!/bin/bash
+# ----------------------
+# DOCKER 
+# ----------------------
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+if [ $? -ne 0 ]; then
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+fi
+echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" | sudo tee /etc/apt/sources.list.d/docker.list
+sudo apt update
+
+sudo apt -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common 
+sudo apt -y install docker-ce docker-ce-cli containerd.io
+sudo groupadd docker
+sudo gpasswd -a $USER docker
+sudo chmod 777 /var/run/docker.sock
+sudo groupadd docker
+sudo gpasswd -a vagrant docker
+sudo systemctl enable docker
+
+# ----------------------
+# KUBERNETES
+# ----------------------
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo apt update
+apt -y install kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
+
+# ----------------------
+# JDK8
+# ----------------------
+sudo apt -y install openjdk-8-jdk
+EOF

@@ -41,7 +41,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ["modifyvm", :id, "--uartmode1", "disconnected"]
       end
       cfg.vm.host_name = opts[:name]
-      cfg.vm.network "forwarded_port", guest: 22, host: opts[:ssh_port], auto_correct: true, id: "ssh"
+      # port forward do not work!!!
+      # cfg.vm.network "forwarded_port", guest: 22, host: opts[:ssh_port], auto_correct: true, id: "ssh" 
       cfg.vm.network "private_network", ip: opts[:ip]
       cfg.vm.synced_folder "../data", "/vagrant", disabled: true
       cfg.vm.provision "shell", path: "config.sh"
