@@ -9,11 +9,10 @@
 
 SUBNET = "192.168.63"
 nodes = [
-    {:name =>  "m-k8s", :cpu => 2, :mem => "3084", :ip => "%s.100" % [SUBNET], :ssh_port => 5100},
-    {:name => "w1-k8s", :cpu => 1, :mem => "2060", :ip => "%s.101" % [SUBNET], :ssh_port => 5101},
-    {:name => "w2-k8s", :cpu => 1, :mem => "2060", :ip => "%s.102" % [SUBNET], :ssh_port => 5102}
-
-    #{:name => "w3-k8s", :cpu => 1, :mem => "2060", :ip => "%s.103" % [SUBNET], :ssh_port => 5103}
+    #{:name =>  "m-k8s", :cpu => 2, :mem => "3084", :ip => "%s.100" % [SUBNET], :ssh_port => 50100},
+    #{:name => "w1-k8s", :cpu => 1, :mem => "2060", :ip => "%s.101" % [SUBNET], :ssh_port => 50101},
+    #{:name => "w2-k8s", :cpu => 1, :mem => "2060", :ip => "%s.102" % [SUBNET], :ssh_port => 50102}
+    {:name => "w3-k8s", :cpu => 1, :mem => "2060", :ip => "%s.103" % [SUBNET], :ssh_port => 50103}
 ]
 
 VAGRANTFILE_API_VERSION = "2"
@@ -30,20 +29,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       config.vm.provision:shell, inline: <<-SHELL
           sudo timedatectl set-timezone Asia/Seoul
       SHELL
-      config.ssh.username = "vagrant"
 
       cfg.vm.provider "virtualbox" do |vb|
         vb.gui = true
         vb.name = opts[:name]
         vb.cpus = opts[:cpu || 1]
-        vb.memory = opts[:mem || "2048"]
-        vb.customize ["modifyvm", :id, "--vram", "12"]
-        vb.customize ["modifyvm", :id, "--uartmode1", "disconnected"]
+        vb.memory = opts[:mem || '2048']
+        vb.customize ['modifyvm', :id, '--vram', '12']
+        vb.customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']
+        vb.customize ['modifyvm', :id, '--audio', 'none']
+        vb.customize ['modifyvm', :id, '--uartmode1', 'disconnected']
+        vb.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
       end
       cfg.vm.host_name = opts[:name]
-      # port forward do not work!!!
-      # cfg.vm.network "forwarded_port", guest: 22, host: opts[:ssh_port], auto_correct: true, id: "ssh" 
       cfg.vm.network "private_network", ip: opts[:ip]
+      cfg.vm.network "forwarded_port", guest: 22, host: opts[:ssh_port], auto_correct: true, id: "ssh"
       cfg.vm.synced_folder "../data", "/vagrant", disabled: true
       cfg.vm.provision "shell", path: "config.sh"
       cfg.vm.provision "shell", path: "install_pkg.sh"

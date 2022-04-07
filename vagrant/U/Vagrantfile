@@ -21,7 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # ================== #
   # Master Node        # 
   # ================== #
-  config.vm.define "m-k8s" do |cfg|
+  config.vm.define "w3-k8s" do |cfg|
     config.vm.box = VBOX
     config.vm.box_version = VBOX_VER
     config.vm.provision:shell, inline: <<-SHELL
@@ -39,7 +39,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # config.vbguest.auto_update = false
     # config.vm.boot_timeout = 600 # wait max 10 minutes
     cfg.vm.provider "virtualbox" do |vb|
-      vb.name = "m-k8s"
+      vb.name = "w3-k8s"
       vb.cpus = 1
       vb.memory = 2560
       # vb.check_guest_additions = false
@@ -52,58 +52,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # vb.customize ["modifyvm", :id, "--vrde", "on"]
       # vb.customize ["modifyvm", :id, "--groups", VBOX_GROUP] # windows only
     end
-    cfg.vm.host_name = "m-k8s"
+    cfg.vm.host_name = "w3-k8s"
     # cfg.vm.network :hostonly, "172.21.160.1", :netmask => "255.255.255.0"
     cfg.vm.network "private_network", ip: "192.168.63.100"
     cfg.vm.network "forwarded_port", guest: 22, host: "50100", auto_correct: true, id: "ssh"
     cfg.vm.synced_folder "../data", "/vagrant", disabled: true
     cfg.vm.provision "shell", path: "config.sh", args: N
     cfg.vm.provision "shell", path: "install_pkg.sh"
-  end
-
-  # ================== #
-  # Worker Node        # 
-  # ================== #
-  (1..N).each do |i|
-    config.vm.define "w#{i}-k8s" do |cfg|
-      config.vm.box = VBOX
-      config.vm.box_version = VBOX_VER
-      config.vm.provision:shell, inline: <<-SHELL
-          sudo timedatectl set-timezone Asia/Seoul
-      SHELL
-
-      # Fix : Warning: Connection reset. Retrying...
-      # config.ssh.insert_key = false
-      # config.ssh.private_key_path = ["~/.ssh/id_rsa"]
-      # config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
-      # config.vm.network "public_network", bridge: "eth0", ip: VBOX_ADDR # 이거 안되네
-      # config.ssh.username = "vagrant"
-      # config.ssh.password = "vagrant"
-
-      # config.vbguest.auto_update = false
-      # config.vm.boot_timeout = 600 # wait max 10 minutes
-      cfg.vm.provider "virtualbox" do |vb|
-        vb.name = "w#{i}-k8s"
-        vb.cpus = 1
-        vb.memory = 2560
-        # vb.check_guest_additions = false
-
-        # Headless mode
-        # vb.gui = true
-        vb.customize ["modifyvm", :id, "--vram", "4"]
-        # vb.customize ["modifyvm", :id, "--uartmode1", "disconnected"]
-
-        # vb.customize ["modifyvm", :id, "--vrde", "on"]
-        # vb.customize ["modifyvm", :id, "--groups", VBOX_GROUP] # windows only
-      end
-      cfg.vm.host_name = "w#{i}-k8s"
-      # cfg.vm.network :hostonly, "172.21.160.1", :netmask => "255.255.255.0"
-      cfg.vm.network "private_network", ip: "192.168.63.10#{i}"
-      cfg.vm.network "forwarded_port", guest: 22, host: "5010#{i}", auto_correct: true, id: "ssh"
-      cfg.vm.synced_folder "../data", "/vagrant", disabled: true
-      cfg.vm.provision "shell", path: "config.sh", args: N
-      cfg.vm.provision "shell", path: "install_pkg.sh"
-    end
   end
 
 end

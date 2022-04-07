@@ -39,6 +39,7 @@ install_docker() {
 
 install_openssh() {
     step "===== Installing openssh ====="
+    sudo apt update
     sudo apt -y install openssh-server
     sudo systemctl enable ssh
 }
@@ -47,6 +48,7 @@ install_kubernetes() {
     step "===== Install Kubernetes ====="
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    sudo apt update
     # apt -y install kubelet kubeadm kubectl
     # apt-mark hold kubelet kubeadm kubectl
 }
@@ -56,8 +58,9 @@ install_tools() {
     # sudo apt install -y python-pip
     # pip install kafka --user
     # pip install kafka-python --user
-    sudo apt -y install default-jre git curl wget vim
-    sudo apt -y install net-tools xterm tmux cowsay 
+    # sudo apt -y install openjdk-8-jdk xterm 
+    sudo apt update
+    sudo apt -y install net-tools tmux cowsay 
 }
 
 setup_ssh_login() {
@@ -70,13 +73,24 @@ setup_welcome_msg() {
     step "===== Install Welcome Message ====="
     sudo echo -e "\necho \"Welcome to Vagrant Ubuntu Server 20.04\" | cowsay\n" >> /home/vagrant/.bashrc
     sudo ln -s /usr/games/cowsay /usr/local/bin/cowsay
+    echo "Finished Ubuntu 20.04 Installation" | cowsay
 }
+
+# repository mirror 변경으로 대체합니다.
+# install_apt_axel() {
+#    step "===== Install APT axel =====" 
+#    sudo apt update
+#    sudo apt install aria2
+#    sudo add-apt-repository -y ppa:apt-fast/stable
+#    sudo apt update
+#    sudo DEBIAN_FRONTEND=noninteractive apt -y install apt-fast
+# }
 
 main() {
     resolve_dns
-    install_kubernetes
-    install_docker
-    install_tools
+    # install_docker # docker 설치는 사용자 마다 선택
+    # install_kubernetes # kubernetes 설치는 사용자 마다 선택
+    install_tools # jdk 설치는 사용자 마다 선택
     install_openssh
     setup_ssh_login
     setup_welcome_msg
