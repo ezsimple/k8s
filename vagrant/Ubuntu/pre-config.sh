@@ -3,10 +3,17 @@
 # repository 변경 (us => kor)
 sudo sed -i 's/us.archive.ubuntu.com/mirror.kakao.com/' /etc/apt/sources.list
 
+cat <<EOF | sudo tee /etc/sysctl.d/kernal.conf
+kernel.softlockup_all_cpu_backtrace=1
+kernel.watchdog_thresh=30
+EOF
+sudo sysctl --system
+
 # vim configuration
-echo 'alias vi=vim' >> /etc/profile
+# echo 'alias vi=vim' >> /etc/profile
+
 # config global vimrc
-cat <<EOF > /etc/vim/vimrc.local
+cat <<EOF | sudo tee /etc/vim/vimrc.local
 set novisualbell
 set ls=2
 set smartindent
@@ -22,16 +29,16 @@ EOF
 
 # local small dns & vagrant cannot parse and delivery shell code.
 echo "192.168.63.100 m-k8s" >> /etc/hosts
-for (( i=1; i<=$1; i++ )); do echo "192.168.63.10$i w$i-k8s" >> /etc/hosts; done
+for (( i=1; i<=5; i++ )); do echo "192.168.63.10$i w$i-k8s" >> /etc/hosts; done
 
 # config DNS
-cat <<EOF > /etc/resolv.conf
+cat <<EOF | sudo tee /etc/resolv.conf
 nameserver 1.1.1.1 #cloudflare DNS
 nameserver 8.8.8.8 #Google DNS
 EOF
 
 # config bash_aliases
-cat <<EOF > /etc/bash.bash_aliases
+cat <<EOF | sudo tee /etc/bash.bash_aliases
 #!/bin/bash
 export LANG=ko_KR.UTF-8
 export LANGUAGE=ko
@@ -105,40 +112,11 @@ complete -F __start_kubectl k
 EOF
 
 # config mandatory packages
-cat <<EOF > /root/INSTALL.sh
+cat <<EOF | sudo tee /root/INSTALL.sh
 #!/bin/bash
-# ----------------------
-# DOCKER 
-# ----------------------
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-if [ $? -ne 0 ]; then
-    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-fi
-echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" | sudo tee /etc/apt/sources.list.d/docker.list
-sudo apt update
-
-sudo apt -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common 
-sudo apt -y install docker-ce docker-ce-cli containerd.io
-sudo groupadd docker
-sudo gpasswd -a $USER docker
-sudo chmod 777 /var/run/docker.sock
-sudo groupadd docker
-sudo gpasswd -a vagrant docker
-sudo systemctl enable docker
-
-# ----------------------
-# KUBERNETES
-# ----------------------
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt update
-# sudo apt -y install kubelet kubeadm kubectl
-# sudo apt-mark hold kubelet kubeadm kubectl
-
 # ----------------------
 # JDK8
 # ----------------------
 sudo apt -y install openjdk-8-jdk
-
 echo "Finished Packages Installation" | cowsay
 EOF

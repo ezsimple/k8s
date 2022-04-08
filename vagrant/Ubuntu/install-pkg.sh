@@ -12,6 +12,7 @@ resolve_dns() {
     sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
 }
 
+# snap을 사용해서 설치 되어야 합니다. (사용금지)
 install_docker() {
     step "===== Installing docker ====="
     sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -44,6 +45,7 @@ install_openssh() {
     sudo systemctl enable ssh
 }
 
+# microk8s를 사용해야 합니다. (사용금지)
 install_kubernetes() {
     step "===== Install Kubernetes ====="
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -63,7 +65,7 @@ install_tools() {
     sudo apt -y install net-tools tmux cowsay 
 }
 
-setup_ssh_login() {
+setup_root_login() {
     step "===== Install SSH login ====="
     sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
     sudo systemctl restart ssh
@@ -71,9 +73,9 @@ setup_ssh_login() {
 
 setup_welcome_msg() {
     step "===== Install Welcome Message ====="
-    sudo echo -e "\necho \"Welcome to Vagrant Ubuntu Server 20.04\" | cowsay\n" >> /home/vagrant/.bashrc
+    sudo echo -e "\necho \"Welcome to Ubuntu Server 20.04 (${1})\" | cowsay\n" >> /home/vagrant/.bashrc
     sudo ln -s /usr/games/cowsay /usr/local/bin/cowsay
-    echo "Finished Ubuntu 20.04 Installation" | cowsay
+    echo "Finished Ubuntu 20.04 (${1}) Installation" | cowsay
 }
 
 # repository mirror 변경으로 대체합니다.
@@ -88,11 +90,11 @@ setup_welcome_msg() {
 
 main() {
     resolve_dns
-    install_docker
-    install_kubernetes
+    # install_docker (사용금지)
+    # install_kubernetes (사용금지)
     install_tools # jdk 설치는 사용자 마다 선택
     install_openssh
-    setup_ssh_login
+    # setup_root_login
     setup_welcome_msg
 }
 

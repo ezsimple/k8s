@@ -9,16 +9,18 @@
 
 SUBNET = "192.168.63"
 nodes = [
-     {:name =>  "m-k8s", :cpu => 2, :mem => "3084", :ip => "%s.100" % [SUBNET], :ssh_port => 50100}
-    # ,{:name => "w1-k8s", :cpu => 1, :mem => "2060", :ip => "%s.101" % [SUBNET], :ssh_port => 50101}
-    # ,{:name => "w2-k8s", :cpu => 1, :mem => "2060", :ip => "%s.102" % [SUBNET], :ssh_port => 50102}
-    # {:name => "w3-k8s", :cpu => 1, :mem => "2060", :ip => "%s.103" % [SUBNET], :ssh_port => 50103}
+     # {:name =>  "m-k8s", :cpu => 2, :mem => "3084", :ip => "%s.100" % [SUBNET], :ssh_port => 50100},
+     # {:name => "w1-k8s", :cpu => 1, :mem => "2060", :ip => "%s.101" % [SUBNET], :ssh_port => 50101},
+     # {:name => "w2-k8s", :cpu => 1, :mem => "2060", :ip => "%s.102" % [SUBNET], :ssh_port => 50102}
+    {:name => "w3-k8s", :cpu => 1, :mem => "2060", :ip => "%s.103" % [SUBNET], :ssh_port => 50103}
 ]
 
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
+  #VBOX = "mkeasy/ubuntu2004-server"
+  #VBOX_VER = "0.0.1"
   VBOX = "generic/ubuntu2004"
   VBOX_VER = "3.6.12"
 
@@ -48,7 +50,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       cfg.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/id_rsa.pub"
       cfg.vm.synced_folder "../data", "/vagrant", disabled: true
       cfg.vm.provision "shell", path: "pre-config.sh"
-      cfg.vm.provision "shell", path: "install-pkg.sh"
+      cfg.vm.provision "shell", path: "install-pkg.sh", args: opts[:name]
       cfg.vm.provision "shell", path: "post-config.sh"
     end
   end
