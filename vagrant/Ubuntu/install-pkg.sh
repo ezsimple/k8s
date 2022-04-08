@@ -62,7 +62,7 @@ install_tools() {
     # pip install kafka-python --user
     # sudo apt -y install openjdk-8-jdk xterm 
     sudo apt update
-    sudo apt -y install net-tools tmux cowsay 
+    sudo apt -y install net-tools tmux cowsay sl cmatrix
 }
 
 setup_root_login() {
@@ -75,7 +75,7 @@ setup_welcome_msg() {
     step "===== Install Welcome Message ====="
     sudo echo -e "\necho \"Welcome to Ubuntu Server 20.04 (${1})\" | cowsay\n" >> /home/vagrant/.bashrc
     sudo ln -s /usr/games/cowsay /usr/local/bin/cowsay
-    echo "Finished Ubuntu 20.04 (${1}) Installation" | cowsay
+    sl
 }
 
 # repository mirror 변경으로 대체합니다.
